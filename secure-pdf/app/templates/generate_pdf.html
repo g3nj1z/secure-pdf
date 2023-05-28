@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+         integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+         crossorigin="anonymous">
+      <title>VAPT Report Generator</title>
+   </head>
+   <body>
+      <h1 class="text-center">VAPT Report Generator</h1>
+      <hr>
+      <div class="container">
+         <h3>Generate PDF Report</h3>
+         <!-- Existing code... -->
+         <form method="post" action="{% url 'generate_pdf' %}">
+            {% csrf_token %}
+            <div class="form-group">
+               <label for="title">Report Title:</label>
+               <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <!-- Prompt for vulnerability details -->
+            <div class="vulnerability-details">
+               <div class="form-group">
+                  <label for="vuln_title_1">Vulnerability Title:</label>
+                  <input type="text" class="form-control" id="vuln_title_1" name="vuln_title_1" required>
+               </div>
+               <div class="form-group">
+                  <label for="severity_1">Severity:</label>
+                  <input type="text" class="form-control" id="severity_1" name="severity_1" required>
+               </div>
+               <div class="form-group">
+                  <label for="description_1">Description:</label>
+                  <textarea class="form-control" id="description_1" name="description_1" rows="3" required></textarea>
+               </div>
+               <div class="form-group">
+                  <label for="remediation_1">Remediation:</label>
+                  <textarea class="form-control" id="remediation_1" name="remediation_1" rows="3" required></textarea>
+               </div>
+            </div>
+            <button type="button" class="btn btn-secondary" id="add-vulnerability-btn">Add Vulnerability</button>
+            <button type="submit" class="btn btn-primary">Generate PDF</button>
+         </form>
+         <!-- Existing code... -->
+         <script>
+            // Add functionality to dynamically add more vulnerability detail sets
+            let vulnerabilityCount = 1;
+            const addVulnerabilityButton = document.getElementById("add-vulnerability-btn");
+            const vulnerabilityDetailsContainer = document.querySelector(".vulnerability-details");
+            
+            addVulnerabilityButton.addEventListener("click", () => {
+                vulnerabilityCount++;
+            
+                const newVulnerabilityDetails = `
+                    <hr>
+                    <div class="form-group">
+                        <label for="vuln_title_${vulnerabilityCount}">Vulnerability Title:</label>
+                        <input type="text" class="form-control" id="vuln_title_${vulnerabilityCount}" name="vuln_title_${vulnerabilityCount}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="severity_${vulnerabilityCount}">Severity:</label>
+                        <input type="text" class="form-control" id="severity_${vulnerabilityCount}" name="severity_${vulnerabilityCount}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description_${vulnerabilityCount}">Description:</label>
+                        <textarea class="form-control" id="description_${vulnerabilityCount}" name="description_${vulnerabilityCount}" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="remediation_${vulnerabilityCount}">Remediation:</label>
+                        <textarea class="form-control" id="remediation_${vulnerabilityCount}" name="remediation_${vulnerabilityCount}" rows="3" required></textarea>
+                    </div>
+                `;
+            
+                vulnerabilityDetailsContainer.insertAdjacentHTML("beforeend", newVulnerabilityDetails);
+            });
+         </script>
+         <!-- Existing code... -->
+         <hr>
+         <h3>Generated PDF Reports</h3>
+         {% for report in reports %}
+         <a href="{{ report.pdf.url }}" target="_blank">{{ report.title }}</a><br>
+         {% empty %}
+         <p>No PDF reports generated yet.</p>
+         {% endfor %}
+      </div>
+      <!-- Optional JavaScript; choose one of the two! -->
+      <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+         crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+         crossorigin="anonymous"></script>
+      <!-- Option 2: jQuery, Popper.js, and Bootstrap JS
+         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+                 integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+                 crossorigin="anonymous"></script>
+         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+                 integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+                 crossorigin="anonymous"></script>
+         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+                 integrity="sha384-w1Q4orYjBQndcko6MimVbzYv8W6VrwDzQnEF/3xwX5lI+3lZf3R9B5oB3S8D0zIh"
+                 crossorigin="anonymous"></script>
+         -->
+   </body>
+</html>
